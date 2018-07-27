@@ -1,0 +1,83 @@
+TROUBLING - NORMAL CONFIDENCE:
+
+Bug:    Possible null pointer dereference of listener in edu.asu.stratego.Server.main(String[]) on exception path
+What:   A reference value which is null on some exception control path is dereferenced here.  This may lead to a
+        NullPointerException when the code is executed.  Note that because FindBugs currently does not prune
+        infeasible exception paths, this may be a false warning.
+Where:	Server.java, line 44 (1 of 1 similar bug(s))
+Fix:    Add if to check if null
+
+
+Bug:    Unconditional wait in edu.asu.stratego.game.ClientGameManager.playGame()
+What:   This method contains a call to java.lang.Object.wait() which is not guarded by conditional control flow.
+        The code should verify that condition it intends to wait for is not already satisfied before calling wait;
+        any previous notifications will be ignored.
+Where:  ClientGameManager.java, line 203 (1 of 8 similar bug(s))
+Fix:    Add if to check if that condition it intends to wait for is not already satisfied
+
+
+
+OF CONCERN - HIGH CONFIDENCE:
+
+Bug:    Dead store to indicator in new edu.asu.stratego.gui.BoardScene()
+What:   This instruction assigns a value to a local variable, but the value is not read or used in any subsequent
+        instruction. Often, this indicates an error, because the value computed is never used.
+Where:  BoardScene.java, line 66 (1 of 1 similar bug(s))
+Fix:    Eliminate the varibale or used it.
+
+
+Bug:    edu.asu.stratego.util.HashTables.PIECE_MAP is a mutable collection
+What:   A mutable collection instance is assigned to a final static field, thus can be changed by malicious code
+        or by accident from another package. Consider wrapping this field into
+        Collections.unmodifiableSet/List/Map/etc. to avoid this vulnerability.
+Where:  HashTables.java, line 12 (1 of 2 similar bug(s))
+Fix:    See 'What'
+
+
+Bug:    Write to static field edu.asu.stratego.game.Game.move from instance method new edu.asu.stratego.game.Game()
+What:   This instance method writes to a static field. This is tricky to get correct if multiple instances are
+        being manipulated, and generally bad practice.
+Where:  Game.java, line 30 (1 of 3 similar bug(s))
+Fix:    Change var to non-static or modify calling method.
+
+
+
+OF CONCERN - NORMAL CONFIDENCE:
+
+Bug:    Integral division result cast to double or float in new edu.asu.stratego.gui.ClientStage()
+What:   This code casts the result of an integral division (e.g., int or long division) operation to double or
+        float. Doing division on integers truncates the result to the integer value closest to zero. The fact
+        that the result was cast to double suggests that this precision should have been retained. What was
+        probably meant was to cast one or both of the operands to double before performing the division.
+        Here is an example: 
+        int x = 2;
+        int y = 5;
+        // Wrong: yields result 0.0
+        double value1 =  x / y;
+        // Right: yields result 0.4
+        double value2 =  x / (double) y;
+Where:  ClienStage.java, line 29 (1 of 1 similar bug(s))
+Fix:    Cast or eliminate the int-cast on line 28
+
+
+Bug:    Should edu.asu.stratego.game.ClientGameManager$ResetImageVisibility be a _static_ inner class?
+What:   This class is an inner class, but does not use its embedded reference to the object which created it.
+        This reference makes the instances of the class larger, and may keep the reference to the creator object
+        alive longer than necessary.  If possible, the class should be made static.
+Where:  ClientGameManager.java, line 430 (1 of 7 similar bug(s))
+Fix:    Make the method static
+
+
+Bug:    Unread field: edu.asu.stratego.game.board.ClientBoard.size; should this field be static?
+What:   This class contains an instance final field that is initialized to a compile-time static value.
+        Consider making the field static.
+Where:  ClientBoard.java, line 14 (1 of 6 similar bug(s))
+Fix:    Make the field static
+
+
+Bug:    Write to static field edu.asu.stratego.game.Game.board from instance method new
+        edu.asu.stratego.game.Game()
+What:   This instance method writes to a static field. This is tricky to get correct if multiple instances are
+        being manipulated, and generally bad practice.
+Where:  Game.java, line 36 (1 of 10 similar bug(s))
+Fix:    Make the field static
